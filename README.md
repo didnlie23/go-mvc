@@ -37,5 +37,11 @@ type LoginController struct {
 ```
 ### no constructor should call another constructor
 ```golang
-loginController := controller.NewLoginController(loginService)
+func NewLoginController(loginService *LoginService) *LoginController {
+	return &LoginController{
+		loginService: loginService,
+	}
+}
+
+loginController := NewLoginController(loginService)
 ```
