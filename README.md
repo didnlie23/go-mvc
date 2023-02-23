@@ -7,14 +7,35 @@
 ├── internals           
 │   ├── app             # run, dependency injection
 │   ├── controller      # handler
+│   ├── entity          # request, response model
 │   ├── repository      # abstract storage
-│   └── service         # business logic
+│   ├── service         # business logic
+│   └── util            # tool
 └── ...
 ```
 
 ## dependency injection
+### layers
 ```golang
+// repository
+type UserRepository interface {
+	Create(avatarId uint64, email, provider string) User
+	Delete(userId uint64) error
+	GetByEmailAndProvider(email, provider string) (User, error)
+}
 
+// service
+type LoginService struct {
+	userRepository   repository.UserRepository
+	avatarRepository repository.AvatarRepository
+}
 
-
+// controller
+type LoginController struct {
+	loginService *service.LoginService
+}
+```
+### no constructor should call another constructor
+```golang
+loginController := controller.NewLoginController(loginService)
 ```
